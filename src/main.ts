@@ -1,5 +1,6 @@
-import { Drawer } from "./drawer.js"
+import { Drawer } from './drawer.js'
 import { Tesselator } from './tesselator.js'
+import { Color } from './color.js'
 
 export interface Size {
     width: number
@@ -11,10 +12,10 @@ const canvas = createCanvas(size)
 const ctx = get2DContext(canvas)
 const tesselator = new Tesselator(size)
 const drawer = new Drawer(ctx)
-const g = ctx.createLinearGradient(0, 0, 150, 150)
-g.addColorStop(0.0, '#abcdef')
-g.addColorStop(1.0, '#fedcba')
-for (let t of tesselator.getTriangles()) {
+const g = drawer
+    .createGradientAt({x: 0, y: 0}, {x: 150, y: 150})
+    .withColors(Color.fromHex('#abcdef'), Color.fromHex('#fedcba'))
+for (const t of tesselator.getTriangles()) {
     drawer.drawTriangle(t).withGradient(g)
 }
 

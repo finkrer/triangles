@@ -5,6 +5,14 @@ export class Color {
         return `#${this.r.toString(16)}${this.g.toString(16)}${this.b.toString(16)}`
     }
 
+    static fromHex(hex: string): Color {
+        hex = hex.replace('#', '')
+        const r = parseInt(hex.substring(0, 2), 16)
+        const g = parseInt(hex.substring(2, 4), 16)
+        const b = parseInt(hex.substring(4, 6), 16)
+        return new Color(r, g, b)
+    }
+
     averageWith(other: Color): Color {
         return new Color(
             (this.r + other.r) / 2,

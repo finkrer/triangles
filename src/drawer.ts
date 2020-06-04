@@ -1,4 +1,5 @@
-import { Triangle, Point } from "./geometry.js"
+import { Triangle, Point } from './geometry.js'
+import { Color } from './color.js'
 
 export class Drawer {
     constructor(readonly ctx: CanvasRenderingContext2D) {}
@@ -13,6 +14,10 @@ export class Drawer {
         this.startAt(points.shift()!)
         points.forEach(p => this.continueTo(p))
         this.finish()
+    }
+
+    createGradientAt(startPoint: Point, endPoint: Point): GradientCreatingContext {
+        return new GradientCreatingContext(this, startPoint, endPoint)
     }
 
     private startAt(p: Point): void {
@@ -36,5 +41,16 @@ class TriangleDrawingContext {
     withGradient(g: CanvasGradient) {
         this.d.ctx.fillStyle = g
         this.d.fillContour(this.t.a, this.t.b, this.t.c)
+    }
+}
+
+class GradientCreatingContext {
+    constructor(private readonly d: Drawer, private readonly a: Point, private readonly b: Point) {}
+
+    withColors(startColor: Color, endColor: Color): CanvasGradient {
+        const g = this.d.ctx.createLinearGradient(this.a.x, this.a.y, this.b.x, this.b.y)
+        g.addColorStop(0.0, startColor.toHex())
+        g.addColorStop(1.0, endColor.toHex())
+        return g
     }
 }
